@@ -3,7 +3,7 @@ module Ledes
     
     attr_accessor :header, :line_items, :fields, :errors, :error_messages, :file
     
-    def initialize(file = "#{RAILS_ROOT}/test.txt")
+    def initialize(file = "#{File.dirname(__FILE__)}/../../test.txt")
       @version = "0.0.1"
       @file = file
       @errors = false
@@ -12,6 +12,23 @@ module Ledes
       @line_items = get_lines @body
       @fields = column_names @line_items.first.body  
       check_length_of_columns_vs_lines
+    end
+
+    # moving the data to two Rails models
+    def move_to_database(column1, column2)
+      # column1 and column2 will be symbols
+      if Object.const_defined?(column1.to_s.capitalize) # yeilds column
+        @model_1 = Object.const_get(column1.to_s.capitalize)
+      else
+        set_error_message("Model \"#{column1.to_s.capitalize}\" not defined")
+      end
+      
+      if Object.const_defined?(column2.to_s.capitalize) # yeilds column              
+        @model_2 = Object.const_get(column2.to_s.capitalize)
+      else
+        set_error_message("Model \"#{column2.to_s.capitalize}\" not defined")
+      end
+      puts self.error_messages.inspect
     end
 
     private

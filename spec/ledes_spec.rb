@@ -5,7 +5,7 @@ describe Ledes::LedesFile do
   describe :creating_a_new_ledes_with_valid_data
 
   before :each do
-    @ledes = Ledes::LedesFile.new("#{RAILS_ROOT}/test.txt")
+    @ledes = Ledes::LedesFile.new
   end
 
   it "should accept a text file as input" do
@@ -33,7 +33,7 @@ describe Ledes::LedesFile do
   # not sure how I feel about this test.  I think technically it's fine, but it 
   # is sort of doing two test; one for nothing longer, and to ensure the longest 
   # is as long as the header.  
-  # prolly fine I guess
+  # prolly fine I guess.  Sort of the same thing
   it "should not contain any items whom has more fields than the header; the longest should be equal to the length of the header" do
     longest = 0
     @ledes.line_items.each {|line| longest = line.body_array.length if line.body_array.length > longest }
@@ -42,7 +42,31 @@ describe Ledes::LedesFile do
   end
 
   it "should return an error if the first line of the Ledes files is not LEDES1992B[]" do
-    ledes = Ledes::LedesFile.new("#{RAILS_ROOT}/test_bad.txt")
+    ledes = Ledes::LedesFile.new("#{File.dirname(__FILE__)}/../test_bad.txt")
     ledes.errors.should be_true
   end
+  
+  # more to come once we figure out more of what this should do.
+  it "should respond to the move_to_database method with two keys as parameters" do
+    @ledes.should respond_to(:move_to_database)    
+  end
+
+  it "should find the two models that have been passed in a symbols to the move_to_database method" do
+    class One
+    end
+
+    class Two
+    end
+    
+    @ledes.move_to_database(:one, :two)
+    @ledes.errors.should be_false
+    @ledes.error_messages.should have(0).things
+  end
+
+  it "should return two error messages and errors should be true if the passed models do not exist" do
+    @ledes.move_to_database(:three, :four)
+    @ledes.errors.should be_true
+    @ledes.error_messages.should have(2).things
+  end
 end
+
