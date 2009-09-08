@@ -1,13 +1,14 @@
-Ledes
+rLedes
 =====
 
-Introduction goes here.
-
+rLedes is a Ledes file parser for Ruby.  Right now, it is a Rails plugin only.  It's also quite in beta and lots of functionality is missing.  Run the Rspec tests with rake spec:plugins with your Rails tests. If you wanna be super cool, add to them :)
 
 Example
 =======
 
-Example goes here.
+@ledes = Ledes::LedesFile.new('path_to_ledes_file')
+@ledes.line_items # the line items in the invoice
+@ledes.fields # the fields in the ledes file (columns)
+@ledes.line_items.first.line_type # the line type, ie, EXP/FEE/INV_ADJ_TYPE
 
-
-Copyright (c) 2009 [name of plugin creator], released under the MIT license
+Copyright (c) 2009 John Yerhot (john@yerhot.org), released under the MIT license
